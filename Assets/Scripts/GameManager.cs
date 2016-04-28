@@ -6,9 +6,9 @@ public class GameManager : MonoBehaviour
 
     public static GameManager instance = null;
     public BoardManager boardScript;
-    private int level = 3;
+    public static int level = 1;
 
-
+    //initializez jocul
     void Awake()
     {
         if (instance == null)
@@ -20,10 +20,14 @@ public class GameManager : MonoBehaviour
         InitGame();
     }
 
+
+    //accesez boardmanager-ul care spawneaza mapul
     void InitGame()
     {
         boardScript.SetupScene(level);
     }
+
+    //daca game over 
     public void GameOver()
     {
         enabled = false;

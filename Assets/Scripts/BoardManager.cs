@@ -19,15 +19,17 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    public int rows = 11;
-    public int columns = 11;
+    public float rows = 11;
+    public float columns = 11;
     public GameObject exit;
     public GameObject[] floorTiles;
     public GameObject[] outerWallTiles;
     public GameObject[] enemyTiles;
     private Transform boardHolder;
     private List<Vector3> gridPositions = new List<Vector3>();
+    public static int enemyCount;
 
+    //initializez lista cu coordonatele mapului
     void InitialiseList()
     {
         gridPositions.Clear();
@@ -40,6 +42,8 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+
+    //pun pe margini wall-uri si in rest floor tile-uri
     void BoardSetup()
     {
         boardHolder = new GameObject("Board").transform;
@@ -59,6 +63,8 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+
+    //creez o pozitie random pt spawn
     Vector3 RandomPosition()
     {
         int randomIndex = Random.Range(0, gridPositions.Count);
@@ -67,6 +73,7 @@ public class BoardManager : MonoBehaviour
         return randomPosition;
     }
 
+    //functia care plaseaza obiecte pe pozitii random
     void LayoutObjectAtRandom(GameObject[] tileArray, int minimum, int maximum)
     {
         int objectCount = Random.Range(minimum, maximum);
@@ -78,16 +85,17 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+    //fac scena
     public void SetupScene(int level)
     {
         BoardSetup();
         InitialiseList();
-        int enemyCount = (int)Mathf.Log(level, 2f);
+        enemyCount = (int)Mathf.Log(level, 2f);
         LayoutObjectAtRandom(enemyTiles, enemyCount, enemyCount);
-        Instantiate(exit, new Vector3(columns, 6, 0f), Quaternion.identity);
-        Instantiate(exit, new Vector3(-1, 6, 0f), Quaternion.identity);
-        Instantiate(exit, new Vector3(6, rows, 0f), Quaternion.identity);
-        Instantiate(exit, new Vector3(6, -1, 0f), Quaternion.identity);
+        Instantiate(exit, new Vector3(11f, 5f, 0f), Quaternion.identity);//plasez exiturile
+        Instantiate(exit, new Vector3(-1f, 5f, 0f), Quaternion.identity);
+        Instantiate(exit, new Vector3(5f, 11f, 0f), Quaternion.identity);
+        Instantiate(exit, new Vector3(5f, -1f, 0f), Quaternion.identity);
     }
 
 
