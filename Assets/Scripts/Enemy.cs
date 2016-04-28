@@ -11,13 +11,17 @@ public class Enemy : MonoBehaviour {
     public float speed = 1f;
     private Transform target;
     public float health = 50f;
+    private bool isPlayer = true;
+    private Animator anim;
 
 
 	void Start ()
     {
         player = GetComponent<Player>();
         boxCollider = GetComponent<BoxCollider2D>();
-   	}
+        transform.localScale -= new Vector3(0.92f, 0.92f, 0f);
+        anim = GetComponent<Animator>();
+    }
 	
     //calculez distanta fata de player
 	float distance()
@@ -26,31 +30,45 @@ public class Enemy : MonoBehaviour {
         return dist;
     }
         
-    //verific daca se poate misca
-    private bool move(float dx, float dy, out RaycastHit2D hit)
+
+    private void OnCollisionEnter2D(Collision2D other)
     {
-        Vector3 start = transform.position;
-        Vector3 end = start + new Vector3(dx, dy, 0.0f);
-        boxCollider.enabled = false;
-        hit = Physics2D.Linecast(start, end, blockinglayer);
-        boxCollider.enabled = true;
-        if (hit.transform == null)
-            return true;
-        return false;
+        if (other.gameObject.tag == "Player")
+        {
+            Debug.Log("TriggerEnter");
+           // isPlayer = false;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D other)
+    {
+
+            Debug.Log("TriggerExit");
+            isPlayer = true;
+        
+    }
+
+    private void attack()
+    {
 
     }
+    //verific daca se poate misca
 
     //verific daca are aggro si il fac sa urmareasca playerul
 	void Update () 
     {
         RaycastHit2D hit;
         if (distance() <= 3f)
+        {
             aggro = true;
+            anim.SetBool("Aggro", true);
+        }
         if(aggro)
         {
             Vector3 pos = Vector3.MoveTowards(transform.position, Player.position, speed * Time.deltaTime);
-           // if (move(pos.x, pos.y, out hit))    
-            transform.position = Vector3.MoveTowards(transform.position, Player.position, speed * Time.deltaTime);
+            if (distance() >= 1f)
+                transform.position = Vector3.MoveTowards(transform.position, Player.position, speed * Time.deltaTime);
+            
         }
 	}
 }

@@ -11,11 +11,12 @@ public class Player : MonoBehaviour
     public LayerMask blockinglayer;
     public bool gasit = true;
     //  public Loader loader;
-    public float restartLevelDelay = 0.1f;
+    public float restartLevelDelay = 0f;
     public static Vector3 position;
     public static Transform playerTransform;
     public BoardManager boardscript;
     private float damage = 10f;
+    private static Vector3 pos;
     
 
 
@@ -23,11 +24,19 @@ public class Player : MonoBehaviour
     void Awake()
     {
         boxcollider = GetComponent<BoxCollider2D>();
+        if (pos.x == -1)
+            pos.x = 10;
+        else if (pos.x == 11)
+            pos.x = 0;
+        if (pos.y == -1)
+            pos.y = 10;
+        else if (pos.y == 11)
+            pos.y = 0;
+        transform.position = pos;
         position = transform.position;
         transform.localScale -= new Vector3(0.95f, 0.95f, 0f);
         playerTransform = transform;
     }
-
    
     //vad daca se poate misca
     private bool move(float dx, float dy, out RaycastHit2D hit)
@@ -68,19 +77,25 @@ public class Player : MonoBehaviour
     private void attack()
     {
         RaycastHit2D hit;
-        GameObject target = FindClosestEnemy();
-         if(Vector3.Distance(target.transform.position,transform.position) <= 1f)
-         {
+        GameObject target = null;
+        if(BoardManager.enemyCount!=0)
+            target = FindClosestEnemy();
+        if (target != null )
+        {
+            if (Vector3.Distance(target.transform.position, transform.position) <= 1f)
+            {
 
-          Enemy monster = target.GetComponent<Enemy>();
-          monster.health -= 1;
-          if(monster.health<=0)
-           {
-                Destroy(monster.gameObject);
-                BoardManager.enemyCount--;
-           }
+                Enemy monster = target.GetComponent<Enemy>();
+                monster.health -= 10;
+                if (monster.health <= 0)
+                {
+                    Destroy(monster.gameObject);
+                    BoardManager.enemyCount--;
+                }
 
+            }
         }
+        else BoardManager.enemyCount = 0;
  
     }
 
@@ -124,8 +139,11 @@ public class Player : MonoBehaviour
     //daca se apropie de exit
     private void OnTriggerEnter2D(Collider2D other)
     {
+       
+        
         if (other.tag == "Exit" && BoardManager.enemyCount==0)//daca nu mai sunt monstrii in camera atunci poate sa treaca prin exit
         {
+            pos = other.transform.position;
             GameManager.level++;
             Invoke("Restart", restartLevelDelay);
             enabled = false;

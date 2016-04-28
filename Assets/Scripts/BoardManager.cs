@@ -92,10 +92,10 @@ public class BoardManager : MonoBehaviour
         InitialiseList();
         enemyCount = (int)Mathf.Log(level, 2f);
         LayoutObjectAtRandom(enemyTiles, enemyCount, enemyCount);
-        Instantiate(exit, new Vector3(11f, 5f, 0f), Quaternion.identity);//plasez exiturile
-        Instantiate(exit, new Vector3(-1f, 5f, 0f), Quaternion.identity);
-        Instantiate(exit, new Vector3(5f, 11f, 0f), Quaternion.identity);
-        Instantiate(exit, new Vector3(5f, -1f, 0f), Quaternion.identity);
+        Instantiate(exit, new Vector3(11f, 5f, 0f), Quaternion.identity);//plasez exiturile E
+        Instantiate(exit, new Vector3(-1f, 5f, 0f), Quaternion.identity);//W
+        Instantiate(exit, new Vector3(5f, 11f, 0f), Quaternion.identity);//N
+        Instantiate(exit, new Vector3(5f, -1f, 0f), Quaternion.identity);//S
     }
 
 
