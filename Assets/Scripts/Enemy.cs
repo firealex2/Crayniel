@@ -45,12 +45,14 @@ public class Enemy : MonoBehaviour {
 
             Debug.Log("TriggerExit");
             isPlayer = true;
-        
     }
 
+    //atac player
     private void attack()
     {
-
+            Player player = target.GetComponent<Player>();
+            player.player_health -= 10;
+            
     }
     //verific daca se poate misca
 
@@ -68,7 +70,11 @@ public class Enemy : MonoBehaviour {
             Vector3 pos = Vector3.MoveTowards(transform.position, Player.position, speed * Time.deltaTime);
             if (distance() >= 1f)
                 transform.position = Vector3.MoveTowards(transform.position, Player.position, speed * Time.deltaTime);
-            
+
+            if(distance() <= 1f)
+            {
+                attack();
+            }
         }
 	}
 }

@@ -3,6 +3,10 @@ using System.Collections;
 
 public class Player : MonoBehaviour
 {
+    
+    //health
+    public float player_health = 100f;
+
     //animations
     bool move_r;
     bool move_l;
@@ -38,7 +42,7 @@ public class Player : MonoBehaviour
             pos.y = 0;
         transform.position = pos;
         position = transform.position;
-        transform.localScale -= new Vector3(0.92f, 0.92f, 0f);
+        transform.localScale -= new Vector3(0.90f, 0.90f, 0f);
         playerTransform = transform;
         animator = GetComponent<Animator>();
     }
@@ -92,6 +96,7 @@ public class Player : MonoBehaviour
 
                 Enemy monster = target.GetComponent<Enemy>();
                 monster.health -= 10;
+                
                 if (monster.health <= 0)
                 {
                     Destroy(monster.gameObject);
@@ -107,7 +112,7 @@ public class Player : MonoBehaviour
     //se misca sau ataca
     void Update()
     {
-
+        
         RaycastHit2D hit;
 
         //move_r
@@ -211,8 +216,6 @@ public class Player : MonoBehaviour
     //daca se apropie de exit
     private void OnTriggerEnter2D(Collider2D other)
     {
-       
-        
         if (other.tag == "Exit" && BoardManager.enemyCount==0)//daca nu mai sunt monstrii in camera atunci poate sa treaca prin exit
         {
             pos = other.transform.position;
