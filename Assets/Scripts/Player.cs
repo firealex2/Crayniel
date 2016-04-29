@@ -196,7 +196,7 @@ public class Player : MonoBehaviour
                     playerTransform = transform;
                 }
 
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKeyUp(KeyCode.Space))
         {
             //anulare animatii
             move_b = false; move_f = false; move_l = false; move_r = false;
