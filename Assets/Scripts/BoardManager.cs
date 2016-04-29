@@ -28,6 +28,7 @@ public class BoardManager : MonoBehaviour
     private Transform boardHolder;
     private List<Vector3> gridPositions = new List<Vector3>();
     public static int enemyCount;
+    public List<GameObject> Enemies;
 
     //initializez lista cu coordonatele mapului
     void InitialiseList()

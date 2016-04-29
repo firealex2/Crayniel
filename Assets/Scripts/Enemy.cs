@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour {
 
@@ -13,6 +14,8 @@ public class Enemy : MonoBehaviour {
     public float health = 50f;
     private bool isPlayer = true;
     private Animator anim;
+    private float timeleft = 0f;
+    public Image EnemyHealth;
 
 
 	void Start ()
@@ -21,6 +24,7 @@ public class Enemy : MonoBehaviour {
         boxCollider = GetComponent<BoxCollider2D>();
         transform.localScale -= new Vector3(0.92f, 0.92f, 0f);
         anim = GetComponent<Animator>();
+        EnemyHealth.enabled = true;
     }
 	
     //calculez distanta fata de player
@@ -50,15 +54,17 @@ public class Enemy : MonoBehaviour {
     //atac player
     private void attack()
     {
-            Player player = target.GetComponent<Player>();
-            player.player_health -= 10;
-            
+       Player.player_health -= 10;
+        Debug.Log(Player.player_health);
     }
     //verific daca se poate misca
 
     //verific daca are aggro si il fac sa urmareasca playerul
 	void Update () 
     {
+        EnemyHealth.rectTransform.position = new Vector3(transform.position.x, transform.position.y + 40, 0);
+        EnemyHealth.fillAmount = health / 50;
+        timeleft -= Time.deltaTime;
         RaycastHit2D hit;
         if (distance() <= 3f)
         {
@@ -73,7 +79,11 @@ public class Enemy : MonoBehaviour {
 
             if(distance() <= 1f)
             {
-                attack();
+                if (timeleft <= 0)
+                {
+                    attack();
+                    timeleft = 5f;
+                }
             }
         }
 	}

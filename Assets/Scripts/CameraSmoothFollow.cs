@@ -4,8 +4,9 @@ using System.Collections;
 public class CameraSmoothFollow : MonoBehaviour
 {
 
-    public Transform player;
+    //public Transform player;
     // Use this for initialization
+    private Transform player = Player.playerTransform;
     void Start()
     {
         
@@ -14,6 +15,9 @@ public class CameraSmoothFollow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(player.position.x + 0, player.position.y + 0, -1);
+        if (!player)
+            player = Player.playerTransform;
+        if(player)
+            transform.position = new Vector3(player.position.x, player.position.y, -1);
     }
 }
