@@ -3,7 +3,11 @@ using System.Collections;
 
 public class Player : MonoBehaviour
 {
-
+    //animations
+    bool move_r;
+    bool move_l;
+    bool move_b;
+    bool move_f;
 
     public float speed = 1f;
     private BoxCollider2D boxcollider;
@@ -17,7 +21,7 @@ public class Player : MonoBehaviour
     public BoardManager boardscript;
     private float damage = 10f;
     private static Vector3 pos;
-    
+    private Animator animator;
 
 
     // Use this for initialization
@@ -34,8 +38,9 @@ public class Player : MonoBehaviour
             pos.y = 0;
         transform.position = pos;
         position = transform.position;
-        transform.localScale -= new Vector3(0.95f, 0.95f, 0f);
+        transform.localScale -= new Vector3(0.92f, 0.92f, 0f);
         playerTransform = transform;
+        animator = GetComponent<Animator>();
     }
    
     //vad daca se poate misca
@@ -104,36 +109,103 @@ public class Player : MonoBehaviour
     {
 
         RaycastHit2D hit;
-        if (Input.GetKey(KeyCode.D))
+
+        //move_r
+        if (Input.GetKeyDown(KeyCode.D))
         {
-            if (move(speed * Time.deltaTime, 0.0f, out hit) == true)
-                transform.position += new Vector3(speed * Time.deltaTime, 0.0f, 0.0f);
-            position = transform.position;
-            playerTransform = transform;
+            move_r = true;
+            animator.SetBool("t_idler", true);
         }
-        else if (Input.GetKey(KeyCode.A))
+            
+                if (Input.GetKeyUp(KeyCode.D))
+                {
+                    move_r = false;
+                    animator.SetBool("t_idler", false);
+                }
+                        if(move_r==true)
+                        {
+                            animator.Play("PlayerMove_r");
+                            if (move(speed * Time.deltaTime, 0.0f, out hit) == true)
+                                transform.position += new Vector3(speed * Time.deltaTime, 0.0f, 0.0f);
+                            position = transform.position;
+                            playerTransform = transform;
+                        }
+                
+        //move_l
+        if (Input.GetKeyDown(KeyCode.A))
         {
-            if (move(-speed * Time.deltaTime, 0.0f, out hit))
-                transform.position -= new Vector3(speed * Time.deltaTime, 0.0f, 0.0f);
-            position = transform.position;
-            playerTransform = transform;
+            move_l = true;
+            animator.SetBool("t_idlel", true);
         }
-        else if (Input.GetKey(KeyCode.W))
+                if (Input.GetKeyUp(KeyCode.A))
+                {
+                    move_l = false;
+                    animator.SetBool("t_idlel", false);
+                }
+                        if(move_l==true)
+                        {
+                            animator.Play("PlayerMove_l");
+                            if (move(-speed * Time.deltaTime, 0.0f, out hit))
+                                transform.position -= new Vector3(speed * Time.deltaTime, 0.0f, 0.0f);
+                            position = transform.position;
+                            playerTransform = transform;
+                        }
+
+      //move_b
+      if (Input.GetKeyDown(KeyCode.W))
+      {
+          move_b = true;
+          animator.SetBool("t_idleb", true);
+      }
+            if (Input.GetKeyUp(KeyCode.W))
+            {
+                move_b = false;
+                animator.SetBool("t_idleb", false);
+            }
+                    if(move_b==true)
+                    {       
+                            //daca nu se misca nici in dreapta nici in stanga
+                            if(move_r==false && move_l==false)
+                            animator.Play("PlayerMove_b");
+
+                            if (move(0.0f, speed * Time.deltaTime, out hit))
+                                transform.position += new Vector3(0.0f, speed * Time.deltaTime, 0.0f);
+                            position = transform.position;
+                            playerTransform = transform;
+                    }
+        //move_f
+        if (Input.GetKeyDown(KeyCode.S))
         {
-            if (move(0.0f, speed * Time.deltaTime, out hit))
-                transform.position += new Vector3(0.0f, speed * Time.deltaTime, 0.0f);
-            position = transform.position;
-            playerTransform = transform;
+            move_f = true;
+            animator.SetBool("t_idlef", true);
         }
-        else if (Input.GetKey(KeyCode.S))
+            if(Input.GetKeyUp(KeyCode.S))
+            {
+                move_f = false;
+                animator.SetBool("t_idlef", false);
+            }
+                if(move_f==true)
+                {
+                    //daca nu se misca nici in dreapta nici in stanga
+                    if (move_r == false && move_l == false)
+                    animator.Play("PlayerMove_f");
+
+                    if (move(0.0f, -speed * Time.deltaTime, out hit))
+                        transform.position -= new Vector3(0.0f, speed * Time.deltaTime, 0.0f);
+                    position = transform.position;
+                    playerTransform = transform;
+                }
+
+        if (Input.GetKey(KeyCode.Space))
         {
-            if (move(0.0f, -speed * Time.deltaTime, out hit))
-                transform.position -= new Vector3(0.0f, speed * Time.deltaTime, 0.0f);
-            position = transform.position;
-            playerTransform = transform;
-        }
-        else if (Input.GetKey(KeyCode.Space))
+            //anulare animatii
+            move_b = false; move_f = false; move_l = false; move_r = false;
+            animator.SetBool("t_idler", false); animator.SetBool("t_idlel", false); animator.SetBool("t_idleb", false); animator.SetBool("t_idlef", false);
+
+            animator.Play("PlayerAtac_r");
             attack();
+        }
+            
     }
 
     //daca se apropie de exit
